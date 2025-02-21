@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote to Earn - Blockchain Rewards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f5ff;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #2c3e50;
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        h2 {
+            color: #34495e;
+            margin-bottom: 15px;
+        }
+
+        .wallet-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .wallet-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #wallet-status {
+            font-weight: 500;
+            color: #7f8c8d;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #wallet-status::before {
+            content: "";
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        #wallet-status.connected {
+            color: #27ae60;
+        }
+
+        #wallet-status.connected::before {
+            background-color: #27ae60;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Ripple effect */
+        button::after {
+            content: "";
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            opacity: 1;
+            transition: transform 0.8s, opacity 0.8s;
+        }
+
+        button:active::after {
+            transform: scale(4);
+            opacity: 0;
+            transition: 0s;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            flex: 1;
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin: 0 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-box h3 {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .stat-box p {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .token-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .voting-section {
+            margin-bottom: 40px;
+        }
+
+        .voting-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.15);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .voting-box:hover {
+            transform: translateY(-3px);
+        }
+
+        .voting-box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+        }
+
+        .voting-box h2 {
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        #voting-status {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            transition: all 0.3s;
+        }
+
+        #voting-status.success {
+            color: #27ae60;
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+
+        #voting-status.error {
+            color: #e74c3c;
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        #vote-button {
+            background: linear-gradient(135deg, #2ecc71, #1abc9c);
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            transform-origin: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(46, 204, 113, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+        }
+
+        #vote-button:hover {
+            background: linear-gradient(135deg, #27ae60, #16a085);
+            animation: none;
+            transform: scale(1.05);
+        }
+
+        #vote-button:disabled {
+            background: #95a5a6;
+            animation: none;
+        }
+
+        .info-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+            z-index: 1;
+        }
+
+        .info-section:hover {
+            transform: translateY(-3px);
+        }
+
+        .info-section::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background-image: url('https://static.vecteezy.com/system/resources/thumbnails/013/373/689/small/stellar-xlm-3d-rendering-isometric-icon-free-png.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: bottom right;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .info-section ol {
+            margin-left: 25px;
+            counter-reset: item;
+        }
+
+        .info-section li {
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 10px;
+            counter-increment: item;
+        }
+
+        .info-section li::before {
+            content: counter(item);
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 50%;
+            font-size: 0.8em;
+            position: absolute;
+            left: -25px;
+            top: 2px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.5), transparent);
+        }
+
+        /* Voting progress animation */
+        .voting-animation {
+            display: none;
+            margin: 20px auto;
+            width: 80%;
+            height: 5px;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .voting-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Confetti animation for successful vote */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f0f;
+            opacity: 0;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        @media (max-width: 650px) {
+            .stats {
+                flex-direction: column;
+            }
+            
+            .stat-box {
+                margin: 10px 0;
+            }
+            
+            .wallet-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            #wallet-status {
+                margin-bottom: 15px;
+                justify-content: center;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <img src="https://static.vecteezy.com/system/resources/thumbnails/013/373/689/small/stellar-xlm-3d-rendering-isometric-icon-free-png.png" alt="Token" class="logo">
+            Vote to Earn
+        </h1>
+        
+        <div class="wallet-info">
+            <div id="wallet-status">Wallet not connected</div>
+            <button id="connect-wallet">Connect Wallet</button>
+        </div>
+
+        <div class="voting-section">
+            <div class="stats">
+                <div class="stat-box">
+                    <h3>Total Votes</h3>
+                    <p id="total-votes">0</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Your Reward Balance</h3>
+                    <p id="reward-balance">
+                        0 
+                        <img src="https://static.vecteezy.com/system/resources/thumbnails/013/373/689/small/stellar-xlm-3d-rendering-isometric-icon-free-png.png" alt="Token" class="token-icon">
+                    </p>
+                </div>
+            </div>
+            
+
+            <div class="voting-box">
+                <h2>Cast Your Vote</h2>
+                <p id="voting-status">Connect your wallet to vote</p>
+                <div class="voting-animation">
+                    <div class="voting-progress"></div>
+
+                    
+                </div>
+                <button id="vote-button" disabled>Vote Now</button>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>How It Works</h2>
+            <ol>
+                <li>Connect your Ethereum wallet to verify your identity</li>
+                <li>Cast your vote securely on the blockchain</li>
+                <li>Earn 10 reward tokens automatically upon voting</li>
+                <li>Each wallet address can participate once</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="confetti-container" id="confetti-container"></div>
+
+    <footer>
+        <p>Vote to Earn - Powered by Ethereum Blockchain</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.0/web3.min.js"></script>
+    <script>
+        // Contract ABI (simplified to match your Solidity contract)
+        const contractABI = [
+    {
+        "inputs": [],
+        "name": "getRewardBalance",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "hasVoted",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "rewardAmount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "tokens",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "totalVotes",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "vote",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+];
+
+// Contract address (you'll need to replace this after deploying your contract)
+const contractAddress = "0x89303827dF8223736e241C63D97E39eF441CD841"; // Replace with your deployed contract address
+
+        // DOM Elements
+        const connectWalletBtn = document.getElementById('connect-wallet');
+        const walletStatus = document.getElementById('wallet-status');
+        const voteButton = document.getElementById('vote-button');
+        const votingStatus = document.getElementById('voting-status');
+        const totalVotesElement = document.getElementById('total-votes');
+        const rewardBalanceElement = document.getElementById('reward-balance');
+        const votingAnimation = document.querySelector('.voting-animation');
+        const votingProgress = document.querySelector('.voting-progress');
+        const confettiContainer = document.getElementById('confetti-container');
+
+        // Global variables
+        let web3;
+        let votingContract;
+        let userAccount;
+
+        // Initialize the application
+        async function init() {
+            // Check if MetaMask is installed
+            if (window.ethereum) {
+                try {
+                    // Initialize Web3 with MetaMask provider
+                    web3 = new Web3(window.ethereum);
+                    
+                    // Create contract instance
+                    votingContract = new web3.eth.Contract(contractABI, contractAddress);
+                    
+                    // Setup event listeners
+                    setupEventListeners();
+                    
+                    // Check if already connected
+                    const accounts = await web3.eth.getAccounts();
+                    if (accounts.length > 0) {
+                        userAccount = accounts[0];
+                        updateUIAfterConnection();
+                    }
+                } catch (error) {
+                    console.error("Error initializing Web3:", error);
+                    votingStatus.textContent = "Failed to connect to blockchain. Please refresh and try again.";
+                    votingStatus.className = "error";
+                }
+            } else {
+                votingStatus.textContent = "MetaMask is not installed. Please install MetaMask to use this dApp.";
+                votingStatus.className = "error";
+                connectWalletBtn.disabled = true;
+            }
+
+            // Add ripple effect to buttons
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const x = e.clientX - e.target.getBoundingClientRect().left;
+                    const y = e.clientY - e.target.getBoundingClientRect().top;
+                    
+                    const ripple = document.createElement('span');
+                    ripple.style.left = `${x}px`;
+                    ripple.style.top = `${y}px`;
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Connect wallet button
+            connectWalletBtn.addEventListener('click', connectWallet);
+            
+            // Vote button
+            voteButton.addEventListener('click', castVote);
+            
+            // Listen for account changes
+            if (window.ethereum) {
+                window.ethereum.on('accountsChanged', (accounts) => {
+                    if (accounts.length > 0) {
+                        userAccount = accounts[0];
+                        updateUIAfterConnection();
+                    } else {
+                        resetUI();
+                    }
+                });
+                
+                // Listen for chain changes
+                window.ethereum.on('chainChanged', () => {
+                    window.location.reload();
+                });
+            }
+        }
+
+        // Connect wallet function
+        async function connectWallet() {
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                userAccount = accounts[0];
+                updateUIAfterConnection();
+            } catch (error) {
+                console.error("Failed to connect wallet:", error);
+                votingStatus.textContent = "Failed to connect wallet. Please try again.";
+                votingStatus.className = "error";
+            }
+        }
+
+        // Update UI after successful connection
+        async function updateUIAfterConnection() {
+            // Update wallet status
+            walletStatus.textContent = `Connected: ${shortenAddress(userAccount)}`;
+            walletStatus.className = "connected";
+            connectWalletBtn.textContent = "Wallet Connected";
+            
+            // Enable vote button
+            voteButton.disabled = false;
+            
+            // Check if user has already voted
+            await checkVotingStatus();
+            
+            // Update stats
+            await updateStats();
+        }
+
+        // Reset UI when disconnected
+        function resetUI() {
+            walletStatus.textContent = "Wallet not connected";
+            walletStatus.className = "";
+            connectWalletBtn.textContent = "Connect Wallet";
+            voteButton.disabled = true;
+            votingStatus.textContent = "Connect your wallet to vote";
+            votingStatus.className = "";
+            totalVotesElement.textContent = "0";
+            rewardBalanceElement.innerHTML = `0 <img src="https://static.vecteezy.com/system/resources/thumbnails/013/373/689/small/stellar-xlm-3d-rendering-isometric-icon-free-png.png" alt="Token" class="token-icon">`;
+        }
+
+        // Cast vote function
+        async function castVote() {
+            try {
+                votingStatus.textContent = "Processing your vote...";
+                votingStatus.className = "";
+                voteButton.disabled = true;
+                
+                // Show voting animation
+                votingAnimation.style.display = "block";
+                
+                // Animate progress
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 5;
+                    votingProgress.style.width = `${progress}%`;
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                    }
+                }, 100);
+                
+                // Call vote function on smart contract
+                await votingContract.methods.vote().send({ from: userAccount });
+                
+                // Clear animation interval if it's still running
+                clearInterval(progressInterval);
+                votingProgress.style.width = "100%";
+                
+                // Hide animation after completion
+                setTimeout(() => {
+                    votingAnimation.style.display = "none";
+                    
+                    // Show success message
+                    votingStatus.textContent = "Thank you for voting! Tokens awarded.";
+                    votingStatus.className = "success";
+                    
+                    // Show confetti animation
+                    showConfetti();
+                    
+                    // Update stats after voting
+                    updateStats();
+                }, 500);
+                
+            } catch (error) {
+                console.error("Error while voting:", error);
+                
+                // Hide animation
+                votingAnimation.style.display = "none";
+                
+                // Handle the common error cases
+                if (error.message.includes("You have already voted")) {
+                    votingStatus.textContent = "You have already voted.";
+                } else {
+                    votingStatus.textContent = "Error while processing your vote. Please try again.";
+                }
+                
+                votingStatus.className = "error";
+                await checkVotingStatus();
+            }
+        }
+
+        // Check if user has already voted
+        async function checkVotingStatus() {
+            try {
+                const hasVoted = await votingContract.methods.hasVoted(userAccount).call();
+                
+                if (hasVoted) {
+                    votingStatus.textContent = "You have already voted.";
+                    votingStatus.className = "success";
+                    voteButton.disabled = true;
+                } else {
+                    votingStatus.textContent = "Ready to cast your vote!";
+                    voteButton.disabled = false;
+                }
+            } catch (error) {
+                console.error("Error checking voting status:", error);
+            }
+        }
+
+        // Update stats (total votes and reward balance)
+        async function updateStats() {
+            try {
+                // Get total votes
+                const totalVotes = await votingContract.methods.totalVotes().call();
+                totalVotesElement.textContent = totalVotes;
+                
+                // Get user's reward balance
+                const rewardBalance = await votingContract.methods.getRewardBalance().call({ from: userAccount });
+                rewardBalanceElement.innerHTML = `${rewardBalance} <img src="https://static.vecteezy.com/system/resources/thumbnails/013/373/689/small/stellar-xlm-3d-rendering-isometric-icon-free-png.png" alt="Token" class="token-icon">`;
+            } catch (error) {
+                console.error("Error updating stats:", error);
+            }
+        }
+
+        // Helper function to shorten address for display
+        function shortenAddress(address) {
+            return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+        }
+
+        // Show confetti animation
+        function showConfetti() {
+            confettiContainer.style.display = "block";
+            
+            // Create confetti pieces
+            const colors = ['#3498db', '#2ecc71', '#f1c40f', '#e74c3c', '#9b59b6'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = `${Math.random() * 10 + 5}px`;
+                confetti.style.height = confetti.style.width;
+                
+                // Random animation duration and delay
+                const duration = Math.random() * 3 + 2;
+                const delay = Math.random() * 2;
+                
+                confetti.style.animation = `fall ${duration}s ease-out ${delay}s forwards`;
+                
+                confettiContainer.appendChild(confetti);
+            }
+            
+            // Remove confetti after animation completes
+            setTimeout(() => {
+                confettiContainer.style.display = "none";
+                confettiContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Initialize the application when the page loads
+        window.addEventListener('load', init);
+    </script>
+    <!-- Add this in the body div, after the footer -->
+<div class="digital-clock">
+    <span id="clock">00:00:00</span>
+</div>
+
+<div class="chatbot-container">
+    <div class="chat-icon" id="chat-icon">
+        <i class="fas fa-comments"></i>
+    </div>
+    <div class="chat-box" id="chat-box">
+        <div class="chat-header">
+            <span>Chat Support</span>
+            <button class="close-chat" id="close-chat">&times;</button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">
+                Hello! How can I help you today?
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Type your message...">
+            <button id="send-message">Send</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add this to your existing style section -->
+<style>
+/* Digital Clock Styles */
+.digital-clock {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+#clock {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+    font-family: 'Digital', monospace;
+}
+
+/* Chatbot Styles */
+.chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.chat-icon {
+    width: 60px;
+    height: 60px;
+    background: #3498db;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s;
+}
+
+.chat-icon:hover {
+    transform: scale(1.1);
+}
+
+.chat-icon i {
+    color: white;
+    font-size: 24px;
+}
+
+.chat-box {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 300px;
+    height: 400px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    display: none;
+    flex-direction: column;
+}
+
+.chat-box.active {
+    display: flex;
+}
+
+.chat-header {
+    padding: 15px;
+    background: #3498db;
+    color: white;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-chat {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 80%;
+}
+
+.message.bot {
+    background: #f0f5ff;
+    margin-right: auto;
+}
+
+.message.user {
+    background: #3498db;
+    color: white;
+    margin-left: auto;
+}
+
+.chat-input {
+    padding: 15px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+}
+
+.chat-input button {
+    padding: 8px 15px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.chat-input button:hover {
+    background: #2980b9;
+}
+</style>
+
+<!-- Add this to your existing script section -->
+<script>
+// Digital Clock
+function updateClock() {
+    const now = new Date();
+    const options = {
+        timeZone: 'Asia/Kolkata',
+        hour12: true,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    };
+    document.getElementById('clock').textContent = now.toLocaleTimeString('en-IN', options);
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+// Chatbot
+const chatIcon = document.getElementById('chat-icon');
+const chatBox = document.getElementById('chat-box');
+const closeChat = document.getElementById('close-chat');
+const chatMessages = document.getElementById('chat-messages');
+const chatInput = document.getElementById('chat-input');
+const sendMessage = document.getElementById('send-message');
+
+chatIcon.addEventListener('click', () => {
+    chatBox.classList.add('active');
+});
+
+closeChat.addEventListener('click', () => {
+    chatBox.classList.remove('active');
+});
+
+function addMessage(message, isUser = false) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+    messageDiv.textContent = message;
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function handleUserMessage() {
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    addMessage(message, true);
+    chatInput.value = '';
+
+    // Simulate bot response
+    setTimeout(() => {
+        addMessage('Thank you for your message. This is a demo response.');
+    }, 1000);
+}
+
+sendMessage.addEventListener('click', handleUserMessage);
+
+chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        handleUserMessage();
+    }
+});
+
+// Add Font Awesome for chat icon
+const fontAwesome = document.createElement('link');
+fontAwesome.rel = 'stylesheet';
+fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css';
+document.head.appendChild(fontAwesome);
+</script>
+</body>
+</html>
